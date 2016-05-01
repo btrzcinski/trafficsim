@@ -6,64 +6,49 @@
     <!-- Default title, will be overridden in JS -->
     <title>Loading...</title>
     <script type="text/javascript" src="js/jquery-2.2.3.js"></script>
+    <script type="text/javascript" src="js/ocanvas-2.8.4.js"></script>
     <style type="text/css">
     </style>
     <script type="text/javascript">
     
     var title = "Traffic Sim";
-    var ctx = null;
+    var canvas = null;
     
-    function setTitle()
-    {
+    function setTitle() {
         $(document).find("title").text(title);
         $("#titleString").html(title);        
     }
     
-    function clearCanvas()
-    {
-        ctx.save();
+    function setupCanvas() {
+        canvas = oCanvas.create({
+            canvas: "#centerStage",
+            background: "#000000",
+            fps: 60
+        });
         
-        ctx.clearRect(0, 0, 600, 100);
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, 600, 100);
-        ctx.fill();
-        
-        ctx.restore();
-    }
-    
-    function drawRoadMarkings()
-    {
-        ctx.save();
-        
-        // center markings
-        ctx.moveTo(0, 48);
-        ctx.lineTo(600, 48);
-        ctx.moveTo(0, 52);
-        ctx.lineTo(600, 52);
-        
-        ctx.strokeStyle = "yellow";
-        ctx.stroke();
-        
-        // lane markings
-        for (var i = 0; i < 600; i += 40)
-        {
-            ctx.moveTo(i, 24);
-            ctx.lineTo(i + 20, 24);
-            ctx.moveTo(i, 76);
-            ctx.lineTo(i + 20, 76);
+        for (var i = 48; i < 56; i += 4) {
+            canvas.addChild(canvas.display.line({
+                start: {x: 0, y: i},
+                end: {x: 600, y: i},
+                stroke: "2px #FFFF00"
+            }));
         }
         
-        ctx.strokeStyle = "white";
-        ctx.stroke();
-        
-        ctx.restore();
+        for (var i = 0; i < 600; i += 40) {
+            for (var j = 24; j < 128; j += 52) {
+                canvas.addChild(canvas.display.line({
+                    start: {x: i, y: j},
+                    end: {x: i + 20, y: j},
+                    stroke: "2px #FFFFFF"
+                }));
+            }
+        }
     }
     
     function init() {
         ctx = $("#centerStage")[0].getContext("2d");
         setTitle();
-        clearCanvas();
-        drawRoadMarkings();
+        setupCanvas();
     }
     
     $(document).ready(init);
@@ -74,8 +59,6 @@
 <body>
     <h1 id="titleString"></h1>
     <canvas id="centerStage" width="600" height="100"></canvas><br>
-    <button type="button" onclick="clearCanvas();">Clear Canvas</button><br>
-    <button type="button" onclick="drawRoadMarkings();">Draw Road Markings</button>
 </body>
 
 </html>
