@@ -26,11 +26,11 @@ function setupCanvas() {
     }
 }
 
-var Car = function (color, lane, speed) {
+var Car = function (color, lane, speed, initialX) {
     this.color = color;
     this.lane = lane;
     this.speed = speed;
-    this.x = 0;
+    this.x = initialX;
 
     this.updateLocation = function () {
         this.x += this.speed;
@@ -52,8 +52,9 @@ var Car = function (color, lane, speed) {
     canvas.addChild(this.rect);
 };
 
-function addRedCarInLaneOne() {
-    cars.push(new Car("#FF0000", 1, 1));
+function addInitialCars() {
+    cars.push(new Car("#FF0000", 1, 1, 0));
+    cars.push(new Car("#00FF00", 1, 1, 50));
 }
 
 function runSim() {
@@ -65,11 +66,21 @@ function runSim() {
     }).start();
 }
 
+function resetSim() {
+    for (var i = 0; i < cars.length; i++) {
+        canvas.removeChild(cars[i].rect);
+    }   
+    
+    cars = [];
+    
+    addInitialCars();
+}
+
 function init() {
     ctx = $("#centerStage")[0].getContext("2d");
     setTitle();
     setupCanvas();
-    addRedCarInLaneOne();
+    addInitialCars();
     runSim();
 }
 
