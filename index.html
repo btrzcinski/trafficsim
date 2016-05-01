@@ -2,13 +2,23 @@
 <html>
     <head>
         <script type="text/javascript" src="js/jquery-2.2.3.js"></script>
+<style type="text/css">
+#centerStage {
+    width: 600px;
+    height: 400px;
+    border-style: dashed;
+    border-size: 5px;
+    border-color: blue;
+}
+</style>
         <title>Traffic Sim</title>
     </head>
     <body>
-        <h1 id="helloString">Hello, world!</h1>
-
+        <h1 id="titleString"></h1>
+        <canvas id="centerStage" />
         <script type="text/javascript">
-            $('#helloString').html('Hello, JQuery!');
+            var title = $(document).find("title").text();
+            $('#titleString').html(title);
         </script>
     </body>
 </html>
