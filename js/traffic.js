@@ -20,18 +20,31 @@ function setupCanvas() {
     }
 }
 
-var Car = function (color, lane, speed, initialX) {
-    this.color = color;
-    this.lane = lane;
-    this.speed = speed;
-    this.x = initialX;
 
-    this.updateLocation = function () {
-        this.x += this.speed;
-        this.y = (this.lane == 1) ? 15 : 65;
+
+var Car = function (color, initialLane, initialX, laneStrategy, speedStrategy) {
+    this.getYValueForLane = function (lane) {
+        return (lane == 1) ? 15 : 65;
+    };
+    
+    this.updateRect = function () {
         this.rect.x = this.x;
         this.rect.y = this.y;
     };
+    
+    this.updateLocation = function () {
+        this.x += this.speedStrategy();
+        this.lane = this.laneStrategy();
+        this.y = this.getYValueForLane(this.lane);
+        this.updateRect();
+    };
+    
+    this.color = color;
+    this.lane = initialLane;
+    this.x = initialX;
+    this.y = this.getYValueForLane(this.lane);
+    this.laneStrategy = laneStrategy;
+    this.speedStrategy = speedStrategy;
 
     this.rect = canvas.display.rectangle({
         x: this.x,
@@ -41,14 +54,32 @@ var Car = function (color, lane, speed, initialX) {
         fill: this.color
     });
 
-    this.updateLocation();
-
     canvas.addChild(this.rect);
 };
 
 function addInitialCars() {
-    cars.push(new Car("#FF0000", 1, 1, 0));
-    cars.push(new Car("#00FF00", 1, 1, 50));
+    stayInLeftLaneStrategy = function() { return 1; };
+    switchLanesAfter50ItersStrategy = function() {
+        if (!this.t) { this.t = 0; }
+        this.t++;
+        if (this.t >= 50)
+        {
+            return 2;
+        }  
+        return 1;
+    };
+    
+    constantSpeedStrategy = function() { return 1; };
+    
+    cars.push(new Car("#FF0000", 1, 0,
+        stayInLeftLaneStrategy,
+        constantSpeedStrategy));
+    cars.push(new Car("#00FF00", 1, 50,
+        switchLanesAfter50ItersStrategy,
+        constantSpeedStrategy));
+    cars.push(new Car("#FFFF00", 1, 100,
+        stayInLeftLaneStrategy,
+        constantSpeedStrategy));
 }
 
 function runSim() {
