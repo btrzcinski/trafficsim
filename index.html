@@ -1,24 +1,42 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script type="text/javascript" src="js/jquery-2.2.3.js"></script>
-<style type="text/css">
-#centerStage {
-    width: 600px;
-    height: 400px;
-    border-style: dashed;
-    border-size: 5px;
-    border-color: blue;
-}
-</style>
-        <title>Traffic Sim</title>
-    </head>
-    <body>
-        <h1 id="titleString"></h1>
-        <canvas id="centerStage" />
-        <script type="text/javascript">
-            var title = $(document).find("title").text();
-            $('#titleString').html(title);
-        </script>
-    </body>
+
+<head>
+    <meta charset="utf-8" />
+    <!-- Default title, will be overridden in JS -->
+    <title>Loading...</title>
+    <script type="text/javascript" src="js/jquery-2.2.3.js"></script>
+    <style type="text/css">
+        #centerStage {
+            width: 600px;
+            height: 400px;
+            border-style: dashed;
+            border-width: 5px;
+            border-color: blue;
+        }
+    </style>
+    <script type="text/javascript">
+    
+    var title = "Traffic Sim";
+    
+    function setTitle()
+    {
+        $(document).find("title").text(title);
+        $("#titleString").html(title);        
+    }
+    
+    function init() {
+        setTitle();
+    }
+    
+    $(document).ready(init);
+    
+    </script>
+</head>
+
+<body>
+    <h1 id="titleString"></h1>
+    <canvas id="centerStage" />
+</body>
+
 </html>
