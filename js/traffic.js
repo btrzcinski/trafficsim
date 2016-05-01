@@ -26,19 +26,18 @@ var Car = function (color, initialLane, initialX, laneStrategy, speedStrategy) {
     this.getYValueForLane = function (lane) {
         return (lane == 1) ? 15 : 65;
     };
-    
+
     this.updateRect = function (oldY) {
         this.rect.x = this.x;
-        if (this.y != oldY)
-        {
+        if (this.y != oldY) {
             this.rect.stop();
-            this.rect.animate({y: this.y}, {
+            this.rect.animate({ y: this.y }, {
                 duration: "short",
                 easing: "ease-in-out-quad"
             });
         }
     };
-    
+
     this.updateLocation = function () {
         this.x += this.speedStrategy();
         this.lane = this.laneStrategy();
@@ -46,7 +45,7 @@ var Car = function (color, initialLane, initialX, laneStrategy, speedStrategy) {
         this.y = this.getYValueForLane(this.lane);
         this.updateRect(oldY);
     };
-    
+
     this.color = color;
     this.lane = initialLane;
     this.x = initialX;
@@ -66,38 +65,38 @@ var Car = function (color, initialLane, initialX, laneStrategy, speedStrategy) {
 };
 
 function addInitialCars() {
-    stayInLeftLaneStrategy = function() { return 1; };
-    switchLanesAfter50ItersStrategy = function() {
-        if (!this.t) { this.t = 0; }
-        this.t++;
-        if (this.t >= 50)
-        {
-            return 2;
-        }  
-        return 1;
-    };
-    switchLanesEveryNItersStrategy = function(N) {
-        return function() {                
-            if (!this.t) { this.t = 0; }
-            if (!this.l) { this.l = 1; }
-            this.t++;
-            
-            if (this.t % N == 0)
-            {
-                this.l = (this.l == 1) ? 2 : 1;
+    stayInLeftLaneStrategy = function () { return 1; };
+    switchLanesAfterNItersStrategy = function (N) {
+        var t = 0;
+        return function () {
+            t++;
+            if (t >= N) {
+                return 2;
             }
-            
-            return this.l;
-            };
+            return 1;
+        };
     };
-    
-    constantSpeedStrategy = function() { return 1; };
-    
+    switchLanesEveryNItersStrategy = function (N) {
+        var t = 0;
+        var l = 1;
+        return function () {
+            t++;
+
+            if (t % N == 0) {
+                l = (l == 1) ? 2 : 1;
+            }
+
+            return l;
+        };
+    };
+
+    constantSpeedStrategy = function () { return 1; };
+
     cars.push(new Car("#FF0000", 1, 0,
         switchLanesEveryNItersStrategy(30),
         constantSpeedStrategy));
     cars.push(new Car("#00FF00", 1, 50,
-        switchLanesAfter50ItersStrategy,
+        switchLanesAfterNItersStrategy(50),
         constantSpeedStrategy));
     cars.push(new Car("#FFFF00", 1, 100,
         switchLanesEveryNItersStrategy(120),
@@ -107,7 +106,7 @@ function addInitialCars() {
 function runSim() {
     canvas.setLoop(function () {
         for (var i = 0; i < cars.length; i++) {
-            c = cars[i];
+            var c = cars[i];
             c.updateLocation();
         }
     }).start();
@@ -117,7 +116,7 @@ function resetSim() {
     canvas.reset();
     setupCanvas();
     cars = [];
-    
+
     addInitialCars();
 }
 
@@ -127,7 +126,7 @@ function init() {
         background: "#000000",
         fps: 60
     });
-    
+
     setTitle();
     setupCanvas();
     addInitialCars();
