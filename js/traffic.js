@@ -9,12 +9,6 @@ function setTitle() {
 }
 
 function setupCanvas() {
-    canvas = oCanvas.create({
-        canvas: "#centerStage",
-        background: "#000000",
-        fps: 60
-    });
-
     var width = $("#centerStage").width();
 
     for (var i = 0; i < width; i += 40) {
@@ -67,17 +61,20 @@ function runSim() {
 }
 
 function resetSim() {
-    for (var i = 0; i < cars.length; i++) {
-        canvas.removeChild(cars[i].rect);
-    }   
-    
+    canvas.reset();
+    setupCanvas();
     cars = [];
     
     addInitialCars();
 }
 
 function init() {
-    ctx = $("#centerStage")[0].getContext("2d");
+    canvas = oCanvas.create({
+        canvas: "#centerStage",
+        background: "#000000",
+        fps: 60
+    });
+    
     setTitle();
     setupCanvas();
     addInitialCars();
