@@ -14,22 +14,14 @@ function setupCanvas() {
         fps: 60
     });
 
-    for (var i = 48; i < 56; i += 4) {
-        canvas.addChild(canvas.display.line({
-            start: { x: 0, y: i },
-            end: { x: 600, y: i },
-            stroke: "2px #FFFF00"
-        }));
-    }
+    var width = $("#centerStage").width();
 
-    for (var i = 0; i < 600; i += 40) {
-        for (var j = 24; j < 128; j += 52) {
-            canvas.addChild(canvas.display.line({
-                start: { x: i, y: j },
-                end: { x: i + 20, y: j },
-                stroke: "2px #FFFFFF"
-            }));
-        }
+    for (var i = 0; i < width; i += 40) {
+        canvas.addChild(canvas.display.line({
+            start: { x: i, y: 50 },
+            end: { x: i + 20, y: 50 },
+            stroke: "2px #FFFFFF"
+        }));
     }
 }
 
