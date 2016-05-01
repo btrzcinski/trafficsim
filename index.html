@@ -2,18 +2,16 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <!-- Default title, will be overridden in JS -->
     <title>Loading...</title>
     <script type="text/javascript" src="js/jquery-2.2.3.js"></script>
     <style type="text/css">
-        #centerStage {
-            background: black;
-        }
     </style>
     <script type="text/javascript">
     
     var title = "Traffic Sim";
+    var ctx = null;
     
     function setTitle()
     {
@@ -21,9 +19,21 @@
         $("#titleString").html(title);        
     }
     
+    function clearCanvas()
+    {
+        ctx.save();
+        
+        ctx.clearRect(0, 0, 600, 100);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, 600, 100);
+        ctx.fill();
+        
+        ctx.restore();
+    }
+    
     function drawRoadMarkings()
     {
-        var ctx = $("#centerStage")[0].getContext("2d");
+        ctx.save();
         
         // center markings
         ctx.moveTo(0, 48);
@@ -46,10 +56,13 @@
         ctx.strokeStyle = "white";
         ctx.stroke();
         
+        ctx.restore();
     }
     
     function init() {
+        ctx = $("#centerStage")[0].getContext("2d");
         setTitle();
+        clearCanvas();
         drawRoadMarkings();
     }
     
@@ -60,7 +73,9 @@
 
 <body>
     <h1 id="titleString"></h1>
-    <canvas id="centerStage" width="600" height="100" />
+    <canvas id="centerStage" width="600" height="100"></canvas><br>
+    <button type="button" onclick="clearCanvas();">Clear Canvas</button><br>
+    <button type="button" onclick="drawRoadMarkings();">Draw Road Markings</button>
 </body>
 
 </html>
