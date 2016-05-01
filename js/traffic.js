@@ -101,6 +101,9 @@ function addInitialCars() {
     cars.push(new Car("#FFFF00", 1, 100,
         switchLanesEveryNItersStrategy(120),
         constantSpeedStrategy));
+    cars.push(new Car("#00FFFF", 1, -100,
+        stayInLeftLaneStrategy,
+        constantSpeedStrategy));
 }
 
 function runSim() {
