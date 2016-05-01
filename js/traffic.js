@@ -27,16 +27,24 @@ var Car = function (color, initialLane, initialX, laneStrategy, speedStrategy) {
         return (lane == 1) ? 15 : 65;
     };
     
-    this.updateRect = function () {
+    this.updateRect = function (oldY) {
         this.rect.x = this.x;
-        this.rect.y = this.y;
+        if (this.y != oldY)
+        {
+            this.rect.stop();
+            this.rect.animate({y: this.y}, {
+                duration: "short",
+                easing: "ease-in-out-quad"
+            });
+        }
     };
     
     this.updateLocation = function () {
         this.x += this.speedStrategy();
         this.lane = this.laneStrategy();
+        oldY = this.y;
         this.y = this.getYValueForLane(this.lane);
-        this.updateRect();
+        this.updateRect(oldY);
     };
     
     this.color = color;
@@ -68,17 +76,31 @@ function addInitialCars() {
         }  
         return 1;
     };
+    switchLanesEveryNItersStrategy = function(N) {
+        return function() {                
+            if (!this.t) { this.t = 0; }
+            if (!this.l) { this.l = 1; }
+            this.t++;
+            
+            if (this.t % N == 0)
+            {
+                this.l = (this.l == 1) ? 2 : 1;
+            }
+            
+            return this.l;
+            };
+    };
     
     constantSpeedStrategy = function() { return 1; };
     
     cars.push(new Car("#FF0000", 1, 0,
-        stayInLeftLaneStrategy,
+        switchLanesEveryNItersStrategy(30),
         constantSpeedStrategy));
     cars.push(new Car("#00FF00", 1, 50,
         switchLanesAfter50ItersStrategy,
         constantSpeedStrategy));
     cars.push(new Car("#FFFF00", 1, 100,
-        stayInLeftLaneStrategy,
+        switchLanesEveryNItersStrategy(120),
         constantSpeedStrategy));
 }
 
